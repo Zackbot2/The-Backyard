@@ -5,7 +5,9 @@ obj/
 # NuGet generated files
 *.nupkg
 *.snupkg
-*.nuget.*    # ignore .nuget.dgspec.json and similar
+*.nuget.*            # ignore dgspec/props/targets
+project.assets.json  # restore-generated
+project.lock.json    # legacy, but safe to ignore
 
 # IDE settings
 .vs/
