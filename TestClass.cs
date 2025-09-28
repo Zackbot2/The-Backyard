@@ -1,6 +1,6 @@
 ﻿namespace TheBackyard;
 
-public class TestClass
+public static class TestClass
 {
     public static void PrintHelloWorld()
     {
