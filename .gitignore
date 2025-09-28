@@ -1,0 +1,22 @@
+# Build output
+bin/
+obj/
+
+# NuGet generated files
+*.nupkg
+*.snupkg
+*.nuget.*    # ignore .nuget.dgspec.json and similar
+
+# IDE settings
+.vs/
+.vscode/
+*.user
+*.suo
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+*.log
+*.tmp

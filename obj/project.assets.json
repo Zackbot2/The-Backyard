@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\important\\New folder\\TheBackyard\\TheBackyard.csproj",
+      "projectUniqueName": "C:\\important\\The-Backyard\\TheBackyard.csproj",
       "projectName": "TheBackyard",
-      "projectPath": "C:\\important\\New folder\\TheBackyard\\TheBackyard.csproj",
+      "projectPath": "C:\\important\\The-Backyard\\TheBackyard.csproj",
       "packagesPath": "C:\\Users\\Zack\\.nuget\\packages\\",
-      "outputPath": "C:\\important\\New folder\\TheBackyard\\obj\\",
+      "outputPath": "C:\\important\\The-Backyard\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
