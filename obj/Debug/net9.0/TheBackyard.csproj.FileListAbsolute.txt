@@ -1,0 +1,11 @@
+C:\important\New folder\TheBackyard\bin\Debug\net9.0\TheBackyard.deps.json
+C:\important\New folder\TheBackyard\bin\Debug\net9.0\TheBackyard.dll
+C:\important\New folder\TheBackyard\bin\Debug\net9.0\TheBackyard.pdb
+C:\important\New folder\TheBackyard\obj\Debug\net9.0\TheBackyard.GeneratedMSBuildEditorConfig.editorconfig
+C:\important\New folder\TheBackyard\obj\Debug\net9.0\TheBackyard.AssemblyInfoInputs.cache
+C:\important\New folder\TheBackyard\obj\Debug\net9.0\TheBackyard.AssemblyInfo.cs
+C:\important\New folder\TheBackyard\obj\Debug\net9.0\TheBackyard.csproj.CoreCompileInputs.cache
+C:\important\New folder\TheBackyard\obj\Debug\net9.0\TheBackyard.dll
+C:\important\New folder\TheBackyard\obj\Debug\net9.0\refint\TheBackyard.dll
+C:\important\New folder\TheBackyard\obj\Debug\net9.0\TheBackyard.pdb
+C:\important\New folder\TheBackyard\obj\Debug\net9.0\ref\TheBackyard.dll
