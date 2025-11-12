@@ -9,3 +9,15 @@ C:\important\New folder\TheBackyard\obj\Debug\net9.0\TheBackyard.dll
 C:\important\New folder\TheBackyard\obj\Debug\net9.0\refint\TheBackyard.dll
 C:\important\New folder\TheBackyard\obj\Debug\net9.0\TheBackyard.pdb
 C:\important\New folder\TheBackyard\obj\Debug\net9.0\ref\TheBackyard.dll
+C:\important\The-Backyard\bin\Debug\net9.0\TheBackyard.deps.json
+c:\important\The-Backyard\bin\Debug\net9.0\TheBackyard.dll
+c:\important\The-Backyard\bin\Debug\net9.0\TheBackyard.pdb
+c:\important\The-Backyard\obj\Debug\net9.0\TheBackyard.GeneratedMSBuildEditorConfig.editorconfig
+c:\important\The-Backyard\obj\Debug\net9.0\TheBackyard.AssemblyInfoInputs.cache
+c:\important\The-Backyard\obj\Debug\net9.0\TheBackyard.AssemblyInfo.cs
+c:\important\The-Backyard\obj\Debug\net9.0\TheBackyard.csproj.CoreCompileInputs.cache
+c:\important\The-Backyard\obj\Debug\net9.0\TheBackyard.sourcelink.json
+c:\important\The-Backyard\obj\Debug\net9.0\TheBackyard.dll
+c:\important\The-Backyard\obj\Debug\net9.0\refint\TheBackyard.dll
+c:\important\The-Backyard\obj\Debug\net9.0\TheBackyard.pdb
+C:\important\The-Backyard\obj\Debug\net9.0\ref\TheBackyard.dll
