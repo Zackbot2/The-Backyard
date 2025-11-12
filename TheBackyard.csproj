@@ -11,4 +11,9 @@
     <Description>Personal utility library</Description>
 </PropertyGroup>
 
+  <ItemGroup>
+    <!-- Cross-platform MonoGame runtime/framework -->
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
+  </ItemGroup>
+
 </Project>

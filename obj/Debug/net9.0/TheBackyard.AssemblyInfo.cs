@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("Personal utility library")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("0.1.1.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.1.1+34c0d97619ac192fd982f4d0f6da4a43f13ffff4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.1.1+504723b0d93efc05b7da92821b559e5ffdeea029")]
 [assembly: System.Reflection.AssemblyProductAttribute("TheBackyard")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TheBackyard")]
 [assembly: System.Reflection.AssemblyVersionAttribute("0.1.1.0")]

@@ -21,3 +21,4 @@ c:\important\The-Backyard\obj\Debug\net9.0\TheBackyard.dll
 c:\important\The-Backyard\obj\Debug\net9.0\refint\TheBackyard.dll
 c:\important\The-Backyard\obj\Debug\net9.0\TheBackyard.pdb
 C:\important\The-Backyard\obj\Debug\net9.0\ref\TheBackyard.dll
+C:\important\The-Backyard\obj\Debug\net9.0\TheBackyard.csproj.AssemblyReference.cache
