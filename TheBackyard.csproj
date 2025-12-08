@@ -9,11 +9,13 @@
     <PackageId>TheBackyard</PackageId>
     <Authors>Zackbot</Authors>
     <Description>A collection of personal utility libraries.</Description>
-</PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+  </PropertyGroup>
 
   <ItemGroup>
     <!-- Cross-platform MonoGame runtime/framework -->
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>
