@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace TheBackyard.MonogameLib;
+namespace TheBackyard.MonoGameLib;
 
 public static class Utilities
 {

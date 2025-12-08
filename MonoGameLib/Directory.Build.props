@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>TheBackyard.MonogameLib</RootNamespace>
+    <RootNamespace>TheBackyard.MonoGameLib</RootNamespace>
     <OutputType>Library</OutputType>
   </PropertyGroup>
   <ItemGroup>
