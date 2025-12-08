@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>TheBackyard</PackageId>
     <Authors>Zackbot</Authors>
-    <Description>Personal utility library</Description>
+    <Description>A collection of personal utility libraries.</Description>
 </PropertyGroup>
 
   <ItemGroup>
