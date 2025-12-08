@@ -5,17 +5,23 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <!-- Umbrella NuGet -->
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>TheBackyard</PackageId>
     <Authors>Zackbot</Authors>
     <Description>A collection of personal utility libraries.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/Zackbot2/The-Backyard</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+    <!-- Prevent duplicate attributes -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
   </PropertyGroup>
 
+  <!-- Include README in package root -->
   <ItemGroup>
-    <!-- Cross-platform MonoGame runtime/framework -->
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" PrivateAssets="All" />
+    <None Include="README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
-
 </Project>
