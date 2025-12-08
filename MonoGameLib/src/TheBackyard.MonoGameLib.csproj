@@ -3,18 +3,16 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>TheBackyard.MonoGameLib</RootNamespace>
-    <AssemblyName>TheBackyard.MonoGameLib</AssemblyName>
+    <AssemblyName>TheBackyard.MonogameLib</AssemblyName>
     <OutputType>Library</OutputType>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-
-    <!-- Do not produce a separate package -->
-    <IsPackable>false</IsPackable>
+    <IsPackable>false</IsPackable> <!-- don't package this separately -->
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" PrivateAssets="All" />
-    <PackageReference Include="MonoGame.Extended" Version="3.9.0" PrivateAssets="All" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
+    <!-- <PackageReference Include="MonoGame.Extended" Version="3.9.0" PrivateAssets="All" /> -->
   </ItemGroup>
 
 </Project>
