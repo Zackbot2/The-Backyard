@@ -1,0 +1,55 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 1.0.3). If empty and run on a tag, tag name will be used.'
+        required: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            9.0.x
+            8.0.x
+
+      - name: Determine version
+        id: ver
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $input = "${{ github.event.inputs.version }}"
+          if ($tag -and $tag -match '^v\d') { $v = $tag.TrimStart('v') }
+          elseif ($input) { $v = $input }
+          else { throw "No version provided. Tag (vX.Y.Z) or workflow input required." }
+          "version=$v" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      - name: Restore, build, pack
+        shell: pwsh
+        run: |
+          dotnet restore .\TheBackyard.csproj
+          dotnet build .\TheBackyard.csproj -c Release
+          dotnet pack .\TheBackyard.csproj -c Release -p:Version=${{ steps.ver.outputs.version }}
+
+      - name: Push package to GitHub Packages
+        shell: pwsh
+        run: |
+          dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" `
+            --name github `
+            --username "${{ github.actor }}" `
+            --password "${{ secrets.GITHUB_TOKEN }}" `
+            --store-password-in-clear-text
+          $pkg = Get-ChildItem ".\bin\Release\TheBackyard.${{ steps.ver.outputs.version }}.nupkg"
+          dotnet nuget push $pkg.FullName --source github --api-key "${{ secrets.GITHUB_TOKEN }}"

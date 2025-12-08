@@ -40,3 +40,4 @@ Content/obj/
 # Local env/config
 *.local.json
 .env
+/.secrets
