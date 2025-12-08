@@ -14,6 +14,11 @@ project.lock.json    # legacy, but safe to ignore
 .vscode/
 *.user
 *.suo
+# JetBrains Rider
+.idea/
+*.sln.iml
+_ReSharper*/
+*.DotSettings.user
 
 # OS-specific
 .DS_Store
@@ -22,3 +27,16 @@ Thumbs.db
 # Logs and temp files
 *.log
 *.tmp
+
+# Test artifacts
+TestResults/
+.coverage
+coverage*.xml
+
+# MonoGame Content Pipeline (if present in repo)
+Content/bin/
+Content/obj/
+
+# Local env/config
+*.local.json
+.env

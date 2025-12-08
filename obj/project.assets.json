@@ -273,23 +273,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Zack\\.nuget\\packages\\": {},
+    "C:\\Users\\Zackbot\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "0.1.1",
     "restore": {
-      "projectUniqueName": "C:\\important\\The-Backyard\\TheBackyard.csproj",
+      "projectUniqueName": "D:\\github\\The-Backyard\\TheBackyard.csproj",
       "projectName": "TheBackyard",
-      "projectPath": "C:\\important\\The-Backyard\\TheBackyard.csproj",
-      "packagesPath": "C:\\Users\\Zack\\.nuget\\packages\\",
-      "outputPath": "C:\\important\\The-Backyard\\obj\\",
+      "projectPath": "D:\\github\\The-Backyard\\TheBackyard.csproj",
+      "packagesPath": "C:\\Users\\Zackbot\\.nuget\\packages\\",
+      "outputPath": "D:\\github\\The-Backyard\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Zack\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Zackbot\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -298,7 +298,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
