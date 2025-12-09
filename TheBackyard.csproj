@@ -9,8 +9,12 @@
     <PackageProjectUrl>https://github.com/Zackbot2/The-Backyard</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
+    <!-- code version -->
+    <TargetFrameworks>net9.0</TargetFrameworks>
+    <LangVersion>preview</LangVersion>
+    <EnablePreviewFeatures>true</EnablePreviewFeatures>
+
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -50,12 +54,12 @@
   <!-- Bundle built DLLs into the package (optional if you want a single umbrella package) -->
   <Target Name="BundleSubLibs" BeforeTargets="Pack">
     <ItemGroup>
-      <_MonoGameLibFiles Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\net8.0\TheBackyard.MonogameLib.dll" />
-      <_MonoGameLibFiles Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\net8.0\TheBackyard.MonogameLib.xml" Condition="Exists('$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\net8.0\TheBackyard.MonogameLib.xml')" />
-      <_MonoGameLibFiles Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\net8.0\TheBackyard.MonogameLib.pdb" Condition="Exists('$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\net8.0\TheBackyard.MonogameLib.pdb')" />
+      <_MonoGameLibFiles Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\net9.0\TheBackyard.MonogameLib.dll" />
+      <_MonoGameLibFiles Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\net9.0\TheBackyard.MonogameLib.xml" Condition="Exists('$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\net9.0\TheBackyard.MonogameLib.xml')" />
+      <_MonoGameLibFiles Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\net8.0\TheBackyard.MonogameLib.pdb" Condition="Exists('$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\net9.0\TheBackyard.MonogameLib.pdb')" />
     </ItemGroup>
     <ItemGroup>
-      <None Include="@(_MonoGameLibFiles)" Pack="true" PackagePath="lib\net8.0\" />
+      <None Include="@(_MonoGameLibFiles)" Pack="true" PackagePath="lib\net9.0\" />
     </ItemGroup>
   </Target>
 
