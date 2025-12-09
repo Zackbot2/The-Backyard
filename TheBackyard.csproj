@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>TheBackyard</PackageId>
-    <Version>1.1.2</Version>
+    <Version>1.1.3</Version>
     <Authors>Zackbot</Authors>
     <Description>A collection of personal utility libraries created by Zackbot.</Description>
     <RepositoryUrl>https://github.com/Zackbot2/The-Backyard</RepositoryUrl>
@@ -37,7 +37,10 @@
 
   <!-- sub-libraries -->
   <ItemGroup>
-    <ProjectReference Include="MonoGameLib\src\TheBackyard.MonogameLib.csproj" />
+    <!-- Do not create a NuGet dependency. Do not reference output at compile. -->
+    <ProjectReference Include="MonoGameLib\src\TheBackyard.MonogameLib.csproj"
+                      ExcludeAssets="all"
+                      ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>
