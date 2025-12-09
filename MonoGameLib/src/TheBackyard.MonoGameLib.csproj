@@ -5,6 +5,7 @@
     <AssemblyName>TheBackyard.MonogameLib</AssemblyName>
 
     <TargetFrameworks>net8.0;net8.0-windows</TargetFrameworks>
+    <TargetPlatformMinVersion>7.0</TargetPlatformMinVersion>
 
     <LangVersion>preview</LangVersion>
     <EnablePreviewFeatures>true</EnablePreviewFeatures>
