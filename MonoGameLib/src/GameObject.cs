@@ -3,17 +3,71 @@ using Microsoft.Xna.Framework;
 
 namespace TheBackyard.MonoGameLib;
 
+/// <summary>
+/// <see cref="GameObject"/>s serve as a general object within a game, with the ability to move and process gravity.
+/// </summary>
 public class GameObject
 {
     #region properties
-    public required Vector2 Position {get; set;}
+    private Vector2 _position;
+    public required Vector2 Position
+    {
+        get => _position;
+        set
+        {
+            _position = value;
+            _boundingBox = null;
+        } 
+    }
+
+    /// <summary>
+    /// The <see cref="Vector2.X"/> component of <see cref="Position"/>.
+    /// </summary>
+    public float XPosition
+    {
+        get => _position.X;
+        set => _position.X = value;
+    }
+
+    /// <summary>
+    /// The <see cref="Vector2.Y"/> component of <see cref="Position"/>.
+    /// </summary>
+    public float YPosition
+    {
+        get => _position.Y;
+        set => _position.Y = value;
+    }
     
+    #region velocity and direction
+    private Vector2 _velocity = Vector2.Zero;
+
     /// <summary>
     /// Defaults to <see cref="Vector2.Zero"/>.
     /// </summary>
-    public Vector2 Velocity {get; set;} = Vector2.Zero;
+    public Vector2 Velocity
+    {
+        get => _velocity;
+        set => _velocity = value;
+    }
 
-    #region expression body definitions
+    /// <summary>
+    /// <see cref="Vector2.X"/> component of <see cref="Velocity"/>.
+    /// </summary>
+    public float XVelocity
+    {
+        get => _velocity.X;
+        set => _velocity.X = value;
+    }
+
+    /// <summary>
+    /// <see cref="Vector2.Y"/> component of <see cref="Velocity"/>.
+    /// </summary>
+    public float YVelocity
+    {
+        get => _velocity.Y;
+        set => _velocity.Y = value;
+    }
+
     /// <summary>
     /// The magnitude of <see cref="Velocity"/>.
     /// </summary>
@@ -37,7 +91,70 @@ public class GameObject
                 Velocity = Vector2.Normalize(value) * Speed;
         }
     }
-    #endregion expression body definitions
+
+    /// <summary>
+    /// The gravity factor this <see cref="GameObject"/> will experience.
+    /// </summary>
+    public float Gravity { get; set; } = 0;
+    #endregion velocity and direction
+
+    #region dimensions
+    /// <summary>
+    /// The width of <see cref="BoundingBox"/>.
+    /// </summary>
+    public int Width
+    {
+        get; 
+        set 
+        {
+            // a width/height of 0 will cause Rectangle to throw an excepiton.
+            ArgumentOutOfRangeException.ThrowIfEqual(value, 0);
+            field = value;
+            _boundingBox = null;
+        }
+    } = 1;
+
+    /// <summary>
+    /// The width of <see cref="BoundingBox"/>.
+    /// </summary>
+    public int Height
+    {
+        get; 
+        set 
+        {
+            // a width/height of 0 will cause Rectangle to throw an excepiton.
+            ArgumentOutOfRangeException.ThrowIfEqual(value, 0);
+            field = value;
+            _boundingBox = null;
+        }
+    } = 1;
+
+    /// <summary>
+    /// Cache the value of <see cref="BoundingBox"/>, and only recalculate when something changes.
+    /// </summary>
+    private Rectangle? _boundingBox = null;
+
+    /// <summary>
+    /// A <see cref="Rectangle"/> with <see cref="Position"/>, <see cref="Width"/> and <see cref="Height"/>.
+    /// </summary>
+    public Rectangle BoundingBox
+    {
+        get
+        {
+            if (_boundingBox == null)
+                _boundingBox = new((int)Position.X, (int)Position.Y, Width, Height);
+            
+            return (Rectangle)_boundingBox;
+        }
+        set
+        {
+            XPosition = value.X;
+            YPosition = value.Y;
+            Width = value.Width;
+            Height = value.Height;
+        }
+    }
+    #endregion dimensions
     #endregion properties
 
     #region constructors
@@ -61,6 +178,7 @@ public class GameObject
     }
     #endregion constructors
 
+    #region methods
     /// <summary>
     /// Update the position of this <see cref="GameObject"/>. Does not account for delta time.
     /// </summary>
@@ -77,4 +195,13 @@ public class GameObject
     {
         Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
     }
+
+    /// <summary>
+    /// Add <see cref="Gravity"/> to <see cref="YVelocity"/>
+    /// </summary>
+    public void ApplyGravity()
+    {
+        YVelocity += Gravity;
+    }
+    #endregion methods
 }
