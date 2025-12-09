@@ -4,7 +4,8 @@
     <RootNamespace>TheBackyard.MonoGameLib</RootNamespace>
     <AssemblyName>TheBackyard.MonogameLib</AssemblyName>
 
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net8.0-windows</TargetFrameworks>
+
     <LangVersion>preview</LangVersion>
     <EnablePreviewFeatures>true</EnablePreviewFeatures>
 

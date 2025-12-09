@@ -2,14 +2,17 @@
 
   <PropertyGroup>
     <PackageId>TheBackyard</PackageId>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <Authors>Zackbot</Authors>
     <Description>A collection of personal utility libraries created by Zackbot.</Description>
     <RepositoryUrl>https://github.com/Zackbot2/The-Backyard</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Zackbot2/The-Backyard</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net8.0-windows</TargetFrameworks>
+    <TargetPlatformMinVersion>7.0</TargetPlatformMinVersion>
+
+    <!-- enable preview features -->
     <LangVersion>preview</LangVersion>
     <EnablePreviewFeatures>true</EnablePreviewFeatures>
 
@@ -52,6 +55,8 @@
   <!-- Placeholder to satisfy NuGet for meta-package -->
   <ItemGroup>
     <None Include="_._" Pack="true" PackagePath="lib/net8.0/" />
+    <!-- Match the resolved TFM with a platform version -->
+    <None Include="_._" Pack="true" PackagePath="lib/net8.0-windows7.0/" />
   </ItemGroup>
 
 </Project>
