@@ -10,7 +10,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
     <!-- code version -->
-    <TargetFrameworks>net9.0</TargetFrameworks>
+    <TargetFramework>net9.0</TargetFramework>
     <LangVersion>preview</LangVersion>
     <EnablePreviewFeatures>true</EnablePreviewFeatures>
 
@@ -54,12 +54,17 @@
   <!-- Bundle built DLLs into the package (optional if you want a single umbrella package) -->
   <Target Name="BundleSubLibs" BeforeTargets="Pack">
     <ItemGroup>
-      <_MonoGameLibFiles Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\net9.0\TheBackyard.MonogameLib.dll" />
-      <_MonoGameLibFiles Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\net9.0\TheBackyard.MonogameLib.xml" Condition="Exists('$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\net9.0\TheBackyard.MonogameLib.xml')" />
-      <_MonoGameLibFiles Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\net8.0\TheBackyard.MonogameLib.pdb" Condition="Exists('$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\net9.0\TheBackyard.MonogameLib.pdb')" />
+      <_MonoGameLibFiles 
+        Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.dll" />
+      <_MonoGameLibFiles 
+        Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.xml"
+        Condition="Exists('$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.xml')" />
+      <_MonoGameLibFiles 
+        Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\net8.0\TheBackyard.MonogameLib.pdb" 
+        Condition="Exists('$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.pdb')" />
     </ItemGroup>
     <ItemGroup>
-      <None Include="@(_MonoGameLibFiles)" Pack="true" PackagePath="lib\net9.0\" />
+      <None Include="@(_MonoGameLibFiles)" Pack="true" PackagePath="lib\$(TargetFramework)\" />
     </ItemGroup>
   </Target>
 
