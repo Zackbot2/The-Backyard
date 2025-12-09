@@ -46,16 +46,6 @@ jobs:
           New-Item -ItemType Directory -Force -Path $out | Out-Null
           dotnet pack .\TheBackyard.csproj -c Release -p:Version=${{ steps.ver.outputs.version }} -o $out
 
-      - name: Push package to GitHub Packages
-        shell: pwsh
-        run: |
-          $owner = "${{ github.repository_owner }}"
-          $token = "${{ secrets.NUGET_PAT }}"
-          $pkg = Get-ChildItem ".\artifacts\packages\TheBackyard.${{ steps.ver.outputs.version }}.nupkg"
-          dotnet nuget push $pkg.FullName `
-            --source "https://nuget.pkg.github.com/$owner/index.json" `
-            --api-key $token
-
       - name: Push package to nuget.org
         shell: pwsh
         run: |
