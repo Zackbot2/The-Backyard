@@ -39,18 +39,26 @@ jobs:
       - name: Restore, build, pack
         shell: pwsh
         run: |
-          dotnet restore .\TheBackyard.csproj
-          dotnet build .\TheBackyard.csproj -c Release
-          # Force the .nupkg to a known folder
+          $cfg = "$PWD\NuGet.Config"
           $out = ".\artifacts\packages"
           New-Item -ItemType Directory -Force -Path $out | Out-Null
-          dotnet pack .\TheBackyard.csproj -c Release -p:Version=${{ steps.ver.outputs.version }} -o $out
 
-      - name: Push package to nuget.org
+          dotnet restore --configfile "$cfg" -v minimal
+          dotnet build -c Release --no-restore
+
+          $v = "${{ steps.ver.outputs.version }}"
+          dotnet pack .\MonoGameLib\src\TheBackyard.MonogameLib.csproj -c Release -o $out --no-build -p:Version=$v
+          dotnet pack .\TheBackyard.csproj -c Release -o $out --no-build -p:Version=$v
+
+      - name: Push packages to nuget.org
         shell: pwsh
         run: |
-          $pkg = Get-ChildItem ".\artifacts\packages\TheBackyard.${{ steps.ver.outputs.version }}.nupkg"
-          dotnet nuget push $pkg.FullName `
-            --source "https://api.nuget.org/v3/index.json" `
-            --api-key "${{ secrets.NUGET_API_KEY }}" `
-            --skip-duplicate
+          $v = "${{ steps.ver.outputs.version }}"
+          $src = "https://api.nuget.org/v3/index.json"
+          $key = "${{ secrets.NUGET_API_KEY }}"
+          foreach ($id in @("TheBackyard.MonogameLib","TheBackyard")) {
+            $pkg = ".\artifacts\packages\$id.$v.nupkg"
+            if (Test-Path $pkg) {
+              dotnet nuget push $pkg --source $src --api-key $key --skip-duplicate
+            }
+          }

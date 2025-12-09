@@ -9,12 +9,18 @@
     <PackageProjectUrl>https://github.com/Zackbot2/The-Backyard</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
-    <!-- code version -->
-    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <LangVersion>preview</LangVersion>
     <EnablePreviewFeatures>true</EnablePreviewFeatures>
 
+    <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput> <!-- meta-package: no lib -->
+    <SuppressDependenciesWhenPacking>false</SuppressDependenciesWhenPacking>
+
+    <!-- Prevent SDK from auto-including Compile/None globs -->
+    <EnableDefaultItems>false</EnableDefaultItems>
+
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -25,51 +31,27 @@
     <Deterministic>true</Deterministic>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 
-    <!-- Prevent umbrella from generating assembly attributes if it has no code -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
   </PropertyGroup>
 
-  <!-- root README -->
+  <!-- Only package README; no source files compiled -->
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
 
-  <!-- sub-libraries -->
+  <!-- Make MonoGameLib a NuGet dependency; do not compile against it -->
   <ItemGroup>
-    <!-- Do not create a NuGet dependency. Do not reference output at compile. -->
-    <ProjectReference Include="MonoGameLib\src\TheBackyard.MonogameLib.csproj"
-                      ExcludeAssets="all"
-                      ReferenceOutputAssembly="false" />
+    <ProjectReference Include="MonoGameLib\src\TheBackyard.MonogameLib.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
-  <!-- Make sure we never compile anything under obj -->
+  <!-- Placeholder to satisfy NuGet for meta-package -->
   <ItemGroup>
-    <Compile Remove="**\obj\**\*.cs" />
-    <Compile Remove="obj\**\*.cs" />
-    <None Remove="**\obj\**\*" />
+    <None Include="_._" Pack="true" PackagePath="lib/net8.0/" />
   </ItemGroup>
-
-  <!-- Bundle built DLLs into the package (optional if you want a single umbrella package) -->
-  <Target Name="BundleSubLibs" BeforeTargets="Pack">
-    <ItemGroup>
-      <!-- Collect per-TFM outputs from the MonoGameLib project -->
-      <_MonoGameLibFiles Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.dll"
-                         Condition="Exists('$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.dll')" />
-      <_MonoGameLibFiles Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.xml"
-                         Condition="Exists('$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.xml')" />
-      <_MonoGameLibFiles Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.pdb"
-                         Condition="Exists('$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.pdb')" />
-    </ItemGroup>
-
-    <!-- Pack files into the matching lib\<TargetFramework>\ folder -->
-    <ItemGroup>
-      <None Include="@(_MonoGameLibFiles)" Pack="true" PackagePath="lib\$(TargetFramework)\" />
-    </ItemGroup>
-  </Target>
 
 </Project>
