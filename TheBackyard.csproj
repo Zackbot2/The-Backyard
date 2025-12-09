@@ -10,7 +10,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
     <!-- code version -->
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <LangVersion>preview</LangVersion>
     <EnablePreviewFeatures>true</EnablePreviewFeatures>
 
@@ -54,15 +54,16 @@
   <!-- Bundle built DLLs into the package (optional if you want a single umbrella package) -->
   <Target Name="BundleSubLibs" BeforeTargets="Pack">
     <ItemGroup>
-      <_MonoGameLibFiles 
-        Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.dll" />
-      <_MonoGameLibFiles 
-        Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.xml"
-        Condition="Exists('$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.xml')" />
-      <_MonoGameLibFiles 
-        Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\net8.0\TheBackyard.MonogameLib.pdb" 
-        Condition="Exists('$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.pdb')" />
+      <!-- Collect per-TFM outputs from the MonoGameLib project -->
+      <_MonoGameLibFiles Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.dll"
+                         Condition="Exists('$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.dll')" />
+      <_MonoGameLibFiles Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.xml"
+                         Condition="Exists('$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.xml')" />
+      <_MonoGameLibFiles Include="$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.pdb"
+                         Condition="Exists('$(MSBuildProjectDirectory)\MonoGameLib\src\bin\$(Configuration)\$(TargetFramework)\TheBackyard.MonogameLib.pdb')" />
     </ItemGroup>
+
+    <!-- Pack files into the matching lib\<TargetFramework>\ folder -->
     <ItemGroup>
       <None Include="@(_MonoGameLibFiles)" Pack="true" PackagePath="lib\$(TargetFramework)\" />
     </ItemGroup>
