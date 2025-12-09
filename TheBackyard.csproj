@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>TheBackyard</PackageId>
-    <Version>1.0.7</Version>
+    <Version>1.1.0</Version>
     <Authors>Zackbot</Authors>
     <Description>A collection of personal utility libraries created by Zackbot.</Description>
     <RepositoryUrl>https://github.com/Zackbot2/The-Backyard</RepositoryUrl>
