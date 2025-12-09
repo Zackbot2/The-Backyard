@@ -1,13 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.0.6</Version>
     <PackageId>TheBackyard</PackageId>
-    <TargetFramework>net9.0</TargetFramework>
+    <Version>1.0.6</Version>
+    <Authors>Zackbot</Authors>
+    <Description>A collection of personal utility libraries created by Zackbot.</Description>
+    <RepositoryUrl>https://github.com/Zackbot2/The-Backyard</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Zackbot2/The-Backyard</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+
     <!-- Prevent umbrella from generating assembly attributes if it has no code -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
@@ -21,6 +34,10 @@
   <!-- sub-libraries -->
   <ItemGroup>
     <ProjectReference Include="MonoGameLib\src\TheBackyard.MonogameLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <!-- Make sure we never compile anything under obj -->

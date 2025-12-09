@@ -55,3 +55,12 @@ jobs:
           dotnet nuget push $pkg.FullName `
             --source "https://nuget.pkg.github.com/$owner/index.json" `
             --api-key $token
+
+      - name: Push package to nuget.org
+        shell: pwsh
+        run: |
+          $pkg = Get-ChildItem ".\artifacts\packages\TheBackyard.${{ steps.ver.outputs.version }}.nupkg"
+          dotnet nuget push $pkg.FullName `
+            --source "https://api.nuget.org/v3/index.json" `
+            --api-key "${{ secrets.NUGET_API_KEY }}" `
+            --skip-duplicate
