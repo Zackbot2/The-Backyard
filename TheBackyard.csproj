@@ -2,14 +2,13 @@
 
   <PropertyGroup>
     <PackageId>TheBackyard</PackageId>
-    <Version>1.2.2</Version>
+    <Version>1.2.1</Version>
     <Authors>Zackbot</Authors>
     <Description>A collection of personal utility libraries created by Zackbot.</Description>
     <RepositoryUrl>https://github.com/Zackbot2/The-Backyard</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Zackbot2/The-Backyard</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
-    <OutputType>Library</OutputType>
     <TargetFrameworks>net8.0;net8.0-windows</TargetFrameworks>
     <TargetPlatformMinVersion>7.0</TargetPlatformMinVersion>
 
@@ -19,9 +18,8 @@
 
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <IncludeBuildOutput>true</IncludeBuildOutput>
-    <!-- Do not include project references as NuGet dependencies -->
-    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <IncludeBuildOutput>false</IncludeBuildOutput> <!-- meta-package: no lib -->
+    <SuppressDependenciesWhenPacking>false</SuppressDependenciesWhenPacking>
 
     <!-- Prevent SDK from auto-including Compile/None globs -->
     <EnableDefaultItems>false</EnableDefaultItems>
@@ -36,37 +34,29 @@
     <Deterministic>true</Deterministic>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 
-    <!-- Remove these; they can interfere with pack metadata -->
-    <!-- <GenerateAssemblyInfo>false</GenerateAssemblyInfo> -->
-    <!-- <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute> -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
   </PropertyGroup>
 
+  <!-- Only package README; no source files compiled -->
   <ItemGroup>
-    <!-- Option A: remove this line entirely if you don't need it -->
-    <!-- <ProjectReference Include="MonoGameLib\src\TheBackyard.MonogameLib.csproj" /> -->
+    <None Include="README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
 
-    <!-- Option B: keep reference for local dev, but exclude from consumers -->
-    <ProjectReference Include="MonoGameLib\src\TheBackyard.MonogameLib.csproj"
-                      ReferenceOutputAssembly="false"
-                      PrivateAssets="All" />
+  <!-- Make MonoGameLib a NuGet dependency; do not compile against it -->
+  <ItemGroup>
+    <ProjectReference Include="MonoGameLib\src\TheBackyard.MonogameLib.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
-  <!-- Compile all .cs files explicitly since EnableDefaultItems=false -->
-  <ItemGroup>
-    <Compile Include="src\**\*.cs" />
-    <None Include="README.md" Pack="true" PackagePath="/" />
-  </ItemGroup>
-
-  <!-- REMOVE this entire placeholder ItemGroup to avoid NU5128 -->
-  <!--
+  <!-- Placeholder to satisfy NuGet for meta-package -->
   <ItemGroup>
     <None Include="_._" Pack="true" PackagePath="lib/net8.0/" />
+    <!-- Match the resolved TFM with a platform version -->
     <None Include="_._" Pack="true" PackagePath="lib/net8.0-windows7.0/" />
   </ItemGroup>
-  -->
 
 </Project>
