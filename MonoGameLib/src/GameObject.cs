@@ -21,6 +21,11 @@ public class GameObject
     }
 
     /// <summary>
+    /// The center of <see cref="BoundingBox"/>
+    /// </summary>
+    public Point CenterPoint => BoundingBox.Center;
+
+    /// <summary>
     /// The <see cref="Vector2.X"/> component of <see cref="Position"/>.
     /// </summary>
     public float XPosition
@@ -193,7 +198,7 @@ public class GameObject
     /// <param name="gameTime"></param>
     public void UpdatePosition(GameTime gameTime)
     {
-        Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        Position += Velocity * Utilities.DeltaTime(gameTime);
     }
 
     /// <summary>
