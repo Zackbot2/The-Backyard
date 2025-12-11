@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageId>TheBackyard.MonogameLib</PackageId>
-    <Version>1.1.0</Version>
+    <PackageId>TheBackyard.MonoGameLib</PackageId>
+    <Version>1.1.1</Version>
     <Description>MonoGame utility library from The Backyard collection.</Description>
   </PropertyGroup>
 
