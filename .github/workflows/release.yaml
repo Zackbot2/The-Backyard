@@ -35,7 +35,7 @@ jobs:
           $ref = "${{ github.ref_name }}"
           $project = "${{ github.event.inputs.project }}"
           $version = "${{ github.event.inputs.version }}"
-          if ($ref -match '^(?<proj>.+) v(?<ver>\d+\.\d+\.\d+(?:\.\d+)*)$') {
+          if ($ref -match '^(?<proj>.+)[ -]v(?<ver>\d+\.\d+\.\d+(?:\.\d+)*)$') {
             $proj = "TheBackyard." + $Matches['proj'].Trim()
             $ver = $Matches['ver'].Trim()
           } elseif ($project -and $version) {
