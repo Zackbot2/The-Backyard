@@ -2,7 +2,7 @@ name: Release
 
 on:
   push:
-    tags: ['* v*.*']  # Match tags like 'TheBackyard.MonogameLib v1.2.3'
+    tags: ['*-v*.*']  # Match tags like 'TheBackyard.MonogameLib v1.2.3'
   workflow_dispatch:
     inputs:
       project:
