@@ -1,20 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>TheBackyard.MonoGameLib</RootNamespace>
-    <AssemblyName>TheBackyard.MonogameLib</AssemblyName>
-
-    <TargetFrameworks>net8.0;net8.0-windows</TargetFrameworks>
-
-    <LangVersion>preview</LangVersion>
-    <EnablePreviewFeatures>true</EnablePreviewFeatures>
-
-    <OutputType>Library</OutputType>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-
-    <IsPackable>true</IsPackable>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageId>TheBackyard.MonogameLib</PackageId>
+    <Version>1.0.0</Version>
+    <Description>MonoGame utility library from The Backyard collection.</Description>
   </PropertyGroup>
 
   <ItemGroup>

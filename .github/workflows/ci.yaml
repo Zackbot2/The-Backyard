@@ -16,11 +16,11 @@ jobs:
             9.0.x
             8.0.x
       - name: Restore
-        run: dotnet restore .\TheBackyard.csproj
+        run: dotnet restore
         shell: pwsh
       - name: Build
-        run: dotnet build .\TheBackyard.csproj -c Release --no-restore
+        run: dotnet build -c Release --no-restore
         shell: pwsh
       - name: Pack (smoke test)
-        run: dotnet pack .\TheBackyard.csproj -c Release --no-build -p:Version=0.0.0-ci
+        run: dotnet pack -c Release --no-build -p:Version=0.0.0-ci -o .\artifacts\packages
         shell: pwsh

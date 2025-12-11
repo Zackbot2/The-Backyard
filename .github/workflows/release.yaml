@@ -2,12 +2,15 @@ name: Release
 
 on:
   push:
-    tags: ['v*']  # trigger on version tags
-  workflow_dispatch:  # allow manual runs
+    tags: ['* v*.*']  # Match tags like 'TheBackyard.MonogameLib v1.2.3'
+  workflow_dispatch:
     inputs:
+      project:
+        description: 'Project/package to publish (e.g., TheBackyard.MonogameLib)'
+        required: true
       version:
-        description: 'Version to publish (e.g., 1.0.3). If empty and run on a tag, tag name will be used.'
-        required: false
+        description: 'Version to publish (e.g., 1.2.3)'
+        required: true
 
 permissions:
   contents: read
@@ -25,40 +28,54 @@ jobs:
             9.0.x
             8.0.x
 
-      - name: Determine version
-        id: ver
+      - name: Parse tag or inputs
+        id: meta
         shell: pwsh
         run: |
-          $tag = "${{ github.ref_name }}"
-          $input = "${{ github.event.inputs.version }}"
-          if ($tag -and $tag -match '^v\d') { $v = $tag.TrimStart('v') }
-          elseif ($input) { $v = $input }
-          else { throw "No version provided. Tag (vX.Y.Z) or workflow input required." }
-          "version=$v" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          $ref = "${{ github.ref_name }}"
+          $project = "${{ github.event.inputs.project }}"
+          $version = "${{ github.event.inputs.version }}"
+          if ($ref -match '^(?<proj>.+) v(?<ver>\d+\.\d+\.\d+(?:\.\d+)*)$') {
+            $proj = "TheBackyard." + $Matches['proj'].Trim()
+            $ver = $Matches['ver'].Trim()
+          } elseif ($project -and $version) {
+            $proj = "TheBackyard." + $project.Trim()
+            $ver = $version.Trim()
+          } else {
+            throw "Tag must be in format '<ShortProject> v<version>' or provide both project and version as workflow inputs."
+          }
+          "project=$proj" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "version=$ver" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      - name: Find project file
+        id: findproj
+        shell: pwsh
+        run: |
+          $proj = "${{ steps.meta.outputs.project }}"
+          $csproj = Get-ChildItem -Recurse -Filter "$proj.csproj" | Select-Object -First 1
+          if (-not $csproj) { throw "Could not find project file for $proj" }
+          "csproj=$($csproj.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
 
       - name: Restore, build, pack
         shell: pwsh
         run: |
-          $cfg = "$PWD\NuGet.Config"
+          $csproj = "${{ steps.findproj.outputs.csproj }}"
           $out = ".\artifacts\packages"
           New-Item -ItemType Directory -Force -Path $out | Out-Null
 
-          dotnet restore --configfile "$cfg" -v minimal
-          dotnet build -c Release --no-restore
+          $ver = "${{ steps.meta.outputs.version }}"
+          dotnet restore "$csproj"
+          dotnet build "$csproj" -c Release --no-restore
+          dotnet pack "$csproj" -c Release -o $out --no-build -p:Version=$ver
 
-          $v = "${{ steps.ver.outputs.version }}"
-          dotnet pack .\MonoGameLib\src\TheBackyard.MonogameLib.csproj -c Release -o $out --no-build -p:Version=$v
-          dotnet pack .\TheBackyard.csproj -c Release -o $out --no-build -p:Version=$v
-
-      - name: Push packages to nuget.org
+      - name: Push package to nuget.org
         shell: pwsh
         run: |
-          $v = "${{ steps.ver.outputs.version }}"
           $src = "https://api.nuget.org/v3/index.json"
           $key = "${{ secrets.NUGET_API_KEY }}"
-          foreach ($id in @("TheBackyard.MonogameLib","TheBackyard")) {
-            $pkg = ".\artifacts\packages\$id.$v.nupkg"
-            if (Test-Path $pkg) {
-              dotnet nuget push $pkg --source $src --api-key $key --skip-duplicate
-            }
+          $pkg = Get-ChildItem ".\artifacts\packages\*.nupkg" | Select-Object -First 1
+          if ($pkg) {
+            dotnet nuget push $pkg.FullName --source $src --api-key $key --skip-duplicate
+          } else {
+            throw "No package found to push."
           }
