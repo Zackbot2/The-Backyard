@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MonoGameLib", "MonoGameLib"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1FCD39F2-0B0C-7EC6-7ABB-80547BFFFF57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheBackyard.MonogameLib", "MonoGameLib\src\TheBackyard.MonogameLib.csproj", "{D5F2767D-6E4F-4CC3-8077-49B7696AC896}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheBackyard.MonoGameLib", "MonoGameLib\src\TheBackyard.MonogameLib.csproj", "{D5F2767D-6E4F-4CC3-8077-49B7696AC896}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
