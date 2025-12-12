@@ -46,25 +46,21 @@ public struct Rectangle : IShape
 
     #endregion translation
     #region interaction
-    public readonly bool Contains(Point point)
+    public readonly bool ContainsPoint(Point point)
     {
-        return point.X > Left && point.X < Right && point.Y > Top && point.Y < Bottom;
+        return
+            point.X > Left && point.X < Right 
+            && point.Y > Top && point.Y < Bottom;
     }
 
-    public readonly bool Overlaps(Rectangle other)
+    public readonly bool Intersects(Rectangle other)
     {
-        bool overlap = false;
-
-        if (Left < other.Right && Right > other.Left
-            && Top < other.Bottom && Bottom > other.Top)
-            overlap = true;
-
-        return overlap;
+        return ShapeUtils.Intersects(this, other);
     }
 
-    public readonly bool Overlaps(Microsoft.Xna.Framework.Rectangle other)
+    public readonly bool Intersects(Microsoft.Xna.Framework.Rectangle other)
     {
-        return Overlaps(FromXna(other));
+        return ShapeUtils.Intersects(this, FromXna(other));
     }
     #endregion interaction
     #region xna
@@ -77,7 +73,7 @@ public struct Rectangle : IShape
     {
         return ToXna(this);
     }
-    
+
     public static Rectangle FromXna(Microsoft.Xna.Framework.Rectangle rect)
     {
         return new(rect.X, rect.Y, rect.Width, rect.Height);
