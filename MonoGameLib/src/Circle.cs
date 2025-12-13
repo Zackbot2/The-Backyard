@@ -11,23 +11,29 @@ public struct Circle : IShape
     #region properties
 
     #region inherited
-    public readonly Point Center => Position;
+    public Point Center => Position;
     public readonly float Area => (float)Math.Pow(PI * Radius, 2);
+    private Point _position;
+    public required Point Position
+    {
+        get => _position;
+        set => _position = value;
+    }
     #endregion inherited
-    public required Point Position;
+    
 
     public required int Radius {get; set;}
 
     public int X
     {
-        get => Position.X;
-        set => Position.X = value;
+        get => _position.X;
+        set => _position.X = value;
     }
 
     public int Y
     {
-        get => Position.Y;
-        set => Position.Y = value;
+        get => _position.Y;
+        set => _position.Y = value;
     }
     #endregion properties
 

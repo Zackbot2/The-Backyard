@@ -10,6 +10,7 @@ public struct Rectangle : IShape
     #region inherited
     public readonly float Area => Width * Height;
     public readonly Point Center => new(X + Width/2, Y + Height/2);
+    public readonly Point Position => Center;
     #endregion inherited
     public required int X {get;set;}
     public required int Y {get;set;}

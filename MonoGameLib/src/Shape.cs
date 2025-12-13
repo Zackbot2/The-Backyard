@@ -6,4 +6,5 @@ public interface IShape
 {
     float Area {get;}
     Point Center {get;}
+    Point Position {get;}
 }

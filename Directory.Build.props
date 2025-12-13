@@ -45,7 +45,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
-  <ItemGroup Condition="Exists('$(MSBuildProjectDirectory)\README.md')">
-    <None Include="$(MSBuildProjectDirectory)\README.md" Pack="true" PackagePath="\" />
+  <ItemGroup Condition="Exists('$(MSBuildProjectDirectory)\..\README.md')">
+    <None Include="$(MSBuildProjectDirectory)\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>
