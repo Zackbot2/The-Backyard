@@ -11,6 +11,9 @@ public class GameObject
     #region properties
     #region position
     private Vector2 _position;
+    /// <summary>
+    /// The position of this <see cref="GameObject"/>.
+    /// </summary>
     public required Vector2 Position
     {
         get => _position;
@@ -195,7 +198,7 @@ public class GameObject
     }
 
     /// <summary>
-    /// Update the position of this <see cref="GameObject"/>, with respect to <see cref="gameTime"/>.
+    /// Update the position of this <see cref="GameObject"/>, with respect to <paramref name="gameTime"/>
     /// </summary>
     /// <param name="gameTime"></param>
     public void UpdatePosition(GameTime gameTime)
