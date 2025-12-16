@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace TheBackyard.MonoGameLib;
 
-public struct Rectangle : IShape
+public struct Rectangle : IShape, IPolygon
 {
     #region properties
     #region inherited
@@ -109,6 +109,18 @@ public struct Rectangle : IShape
         return new(rect.X, rect.Y, rect.Width, rect.Height);
     }
     #endregion xna
+    
+    
+    public readonly List<Vector2> ToVectors()
+    {
+        throw new NotImplementedException();
+    }
+
+    public readonly List<Vector2> GetNormals()
+    {
+        throw new NotImplementedException();
+    }
+    
     #endregion methods
 
     #region operators
