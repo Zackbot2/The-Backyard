@@ -9,6 +9,7 @@ namespace TheBackyard.MonoGameLib;
 public class GameObject
 {
     #region properties
+    #region position
     private Vector2 _position;
     public required Vector2 Position
     {
@@ -42,6 +43,7 @@ public class GameObject
         get => _position.Y;
         set => _position.Y = value;
     }
+    #endregion position
     
     #region velocity and direction
     private Vector2 _velocity = Vector2.Zero;
