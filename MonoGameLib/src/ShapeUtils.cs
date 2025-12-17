@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 
 namespace TheBackyard.MonoGameLib;
 
+// todo: refactor this class. I am not happy with how it works currently, and the functionality is way too general.
 internal static class ShapeUtils
 {
     #region intersects

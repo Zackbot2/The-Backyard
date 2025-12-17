@@ -47,4 +47,28 @@ public struct Circle : IShape
         Radius = radius;
     }
     #endregion constructors
+
+    #region distance
+    #region static
+    /// <summary>
+    /// Get the exact distance between two <see cref="Circle"/>s.
+    /// </summary>
+    /// <param name="circle"></param>
+    /// <returns>Returns the distance BETWEEN each <see cref="Circle"/>. Will be negative if they are overlapping.</returns>
+    public static int Distance(Circle circle1, Circle circle2)
+    {
+        return ShapeUtils.GetMinimumDistance(circle1, circle2);
+    }
+    #endregion static
+
+    /// <summary>
+    /// Get the exact distance <b>between</b> <see cref="this"/> <see cref="Circle"/> and <paramref name="circle"/>.
+    /// </summary>
+    /// <param name="circle"></param>
+    /// <returns>Returns the distance <b>between</b> each <see cref="Circle"/>. Will be negative if they are overlapping.</returns>
+    public readonly int Distance(Circle circle)
+    {
+        return ShapeUtils.GetMinimumDistance(this, circle);
+    }
+    #endregion distance
 }

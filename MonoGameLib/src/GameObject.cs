@@ -52,6 +52,7 @@ public class GameObject
     private Vector2 _velocity = Vector2.Zero;
 
     /// <summary>
+    /// Velocity, in pixels per second.
     /// Defaults to <see cref="Vector2.Zero"/>.
     /// </summary>
     public Vector2 Velocity
@@ -203,7 +204,7 @@ public class GameObject
     /// <param name="gameTime"></param>
     public void UpdatePosition(GameTime gameTime)
     {
-        Position += Velocity * Utilities.DeltaTime(gameTime);
+        Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
     }
 
     /// <summary>
