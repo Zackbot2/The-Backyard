@@ -10,16 +10,30 @@ namespace TheBackyard.MonoGameLib;
 // ideally, this should be as simple as having this function as a central dictionary.
 // there should be a queue removal system, so things can create textures and schedule their removal at the end of the draw cycle.
 
+/// <summary>
+/// Manage and keep track of game <see cref="Texture2D"/>s.
+/// Made to streamline the process of unloading unused textures and clearing up memory wherever possible.
+/// </summary>
 public class TextureManager
 {
     #region public parts
-    public static Texture2D PixelTexture { get; private set; } = null!;
+    /// <summary>
+    /// A 1x1 <see cref="Color.White"/> <see cref="Texture2D"/>.
+    /// </summary>
+    public Texture2D PixelTexture { get; private set; }
+    /// <summary>
+    /// The central dictionary containing all textures and ids
+    /// </summary>
     public Dictionary<string, Texture2D> TextureDictionary { get; private set; }
     #endregion public parts
     #region private parts
     private List<string> _removalQueue;
     #endregion private parts
 
+    /// <summary>
+    /// Create a new <see cref="TextureManager"/>.
+    /// </summary>
+    /// <param name="graphicsDevice"></param>
     public TextureManager(GraphicsDevice graphicsDevice)
     {
         PixelTexture = CreatePixelTexture(graphicsDevice);
@@ -135,9 +149,9 @@ public class TextureManager
             {
                 item.Value.Dispose();
             }
-            catch
+            catch (ObjectDisposedException)
             {
-
+                // only catch ObjectDisposedExceptions. if there's a real error, it should throw.
             }
 
             TextureDictionary.Clear();
@@ -189,9 +203,8 @@ public class TextureManager
     /// <returns></returns>
     private static Texture2D CreatePixelTexture(GraphicsDevice graphicsDevice)
     {
-        Color[] data = [Color.White];
         Texture2D pixelTexture = new(graphicsDevice, 1, 1);
-        pixelTexture.SetData(data);
+        pixelTexture.SetData([Color.White]);
         return pixelTexture;
     }
 }
