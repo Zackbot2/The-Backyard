@@ -201,7 +201,7 @@ public class TextureManager
     /// Create a 1x1 white pixel texture.
     /// </summary>
     /// <returns></returns>
-    private static Texture2D CreatePixelTexture(GraphicsDevice graphicsDevice)
+    public static Texture2D CreatePixelTexture(GraphicsDevice graphicsDevice)
     {
         Texture2D pixelTexture = new(graphicsDevice, 1, 1);
         pixelTexture.SetData([Color.White]);

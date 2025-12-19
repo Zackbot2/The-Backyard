@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TheBackyard.MonoGameLib;
 
@@ -12,17 +13,17 @@ public struct Rectangle : IPolygon
     #region properties
     #region inherited
     /// <summary>
-    /// The amount of pixels that lie within this <see cref="Rectangle"/>
+    /// The amount of pixels that lie within this <see cref="Rectangle"/>.
     /// </summary>
     public readonly float Area => Width * Height;
     /// <summary>
-    /// The direct center of this <see cref="Rectangle"/>
+    /// The direct center of this <see cref="Rectangle"/>.
     /// </summary>
     public readonly Point Center => new(X + Width/2, Y + Height/2);
     /// <summary>
-    /// 
+    /// The top left position of this <see cref="Rectangle"/>.
     /// </summary>
-    public readonly Point Position => Center;
+    public readonly Point Position => new(X, Y);
     #endregion inherited
     /// <summary>
     /// The x coordinate of this <see cref="Rectangle"/>.
@@ -62,6 +63,11 @@ public struct Rectangle : IPolygon
     /// The rotation of this <see cref="Rectangle"/>, in radians.
     /// </summary>
     public double Rotation {get; set;} = 0;
+
+    /// <summary>
+    /// The origin of rotation, in local space.
+    /// </summary>
+    public Vector2 Origin {get; set;} = Vector2.Zero;
     #endregion
 
     #region constructors
@@ -83,6 +89,21 @@ public struct Rectangle : IPolygon
     {
         X = x;
         Y = y;
+        Width = width;
+        Height = height;
+    }
+
+    /// <summary>
+    /// Instantiate a new <see cref="Rectangle"/>, using a <see cref="Vector2"/> for <paramref name="position"/>.
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    [SetsRequiredMembers]
+    public Rectangle(Vector2 position, int width, int height)
+    {
+        X = (int)position.X;
+        Y = (int)position.Y;
         Width = width;
         Height = height;
     }
@@ -115,28 +136,35 @@ public struct Rectangle : IPolygon
     /// Does <paramref name="point"/> lie within this <see cref="Rectangle"/>?
     /// </summary>
     /// <param name="point"></param>
+    /// <param name="spriteBatch"></param>
+    /// <param name="graphicsDevice"></param>
     /// <returns></returns>
-    public readonly bool ContainsPoint(Point point)
+    public readonly bool ContainsPoint(Point point, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
     {
         // immediately return false if the point is outside of collidable range
         if ((point.X - X + point.Y - Y) / 2 > Width + Height)
             return false;
+
+        point += Origin.ToPoint();
 
         if (Rotation != 0 && Rotation != Math.PI)
         {
             Vector2 xAxis = new((float)Math.Cos(-Rotation), (float)Math.Sin(-Rotation));
             Vector2 yAxis = new(-xAxis.Y, xAxis.X);
 
-            // offset from origin
-            point -= Center;
+            // offset from origin, which lies at the position + origin
+            point -= (Position + Origin.ToPoint());
 
             Point translatedPoint;
 
-            translatedPoint.X = (int)(point.X * xAxis.X + point.Y * yAxis.X + Center.X);
-            translatedPoint.Y = (int)(point.X * xAxis.Y + point.Y * yAxis.Y + Center.Y);
+            translatedPoint.X = (int)(point.X * xAxis.X + point.Y * yAxis.X);
+            translatedPoint.Y = (int)(point.X * xAxis.Y + point.Y * yAxis.Y);
+
+            translatedPoint += (Position + Origin.ToPoint());
 
             point = translatedPoint;
         }
+        point.Draw(spriteBatch, graphicsDevice, Color.Black);
         return
             point.X >= Left && point.X <= Right 
             && point.Y >= Top && point.Y <= Bottom;
@@ -194,7 +222,7 @@ public struct Rectangle : IPolygon
     #endregion xna
     
     /// <summary>
-    /// Calculate the <see cref="Rectangle"/>.
+    /// Get this <see cref="Rectangle"/> as <see cref="Vector2"/>s, going clockwise from the top left position.
     /// </summary>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
@@ -204,11 +232,11 @@ public struct Rectangle : IPolygon
     }
 
     /// <summary>
-    /// Get the normals
+    /// Get this <see cref="Rectangle"/> as <see cref="Point"/>s, in no particular order.
     /// </summary>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public readonly List<Vector2> GetNormals()
+    public readonly List<Point> ToPoints()
     {
         throw new NotImplementedException();
     }
