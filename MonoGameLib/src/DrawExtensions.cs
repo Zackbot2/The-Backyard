@@ -62,7 +62,7 @@ public static class DrawExtensions
 
         spriteBatch.Draw(
             TextureManager.CreatePixelTexture(graphicsDevice), 
-            rect.Position.ToVector2(),  // position
+            rect.Position.ToVector2() + rect.Origin,  // position
             rect.ToXna(),
             (Color)color,
             (float)rect.Rotation,   // rotation

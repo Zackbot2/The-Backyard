@@ -127,8 +127,8 @@ public struct Rectangle : IPolygon
     /// <param name="point"></param>
     public void CenterOn(Point point)
     {
-        X = point.X - Width;
-        Y = point.Y - Height;
+        X = (int)(point.X);
+        Y = (int)(point.Y);
     }
     #endregion translation
     #region interaction
@@ -136,16 +136,12 @@ public struct Rectangle : IPolygon
     /// Does <paramref name="point"/> lie within this <see cref="Rectangle"/>?
     /// </summary>
     /// <param name="point"></param>
-    /// <param name="spriteBatch"></param>
-    /// <param name="graphicsDevice"></param>
     /// <returns></returns>
-    public readonly bool ContainsPoint(Point point, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
+    public readonly bool ContainsPoint(Point point)
     {
         // immediately return false if the point is outside of collidable range
         if ((point.X - X + point.Y - Y) / 2 > Width + Height)
             return false;
-
-        point += Origin.ToPoint();
 
         if (Rotation != 0 && Rotation != Math.PI)
         {
@@ -164,7 +160,6 @@ public struct Rectangle : IPolygon
 
             point = translatedPoint;
         }
-        point.Draw(spriteBatch, graphicsDevice, Color.Black);
         return
             point.X >= Left && point.X <= Right 
             && point.Y >= Top && point.Y <= Bottom;
@@ -223,22 +218,34 @@ public struct Rectangle : IPolygon
     
     /// <summary>
     /// Get this <see cref="Rectangle"/> as <see cref="Vector2"/>s, going clockwise from the top left position.
+    /// Does account for <see cref="Rotation"/>.
     /// </summary>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
     public readonly List<Vector2> ToVectors()
     {
-        throw new NotImplementedException();
+        return [
+            Vector2.Rotate(new(Right, 0), (float)Rotation),
+            Vector2.Rotate(new(0, Bottom), (float)Rotation),
+            //Vector2.Rotate(new(-Right, 0), (float)Rotation),
+            //Vector2.Rotate(new(0, -Bottom), (float)Rotation)
+        ];
     }
 
     /// <summary>
-    /// Get this <see cref="Rectangle"/> as <see cref="Point"/>s, in no particular order.
+    /// Get this <see cref="Rectangle"/> as <see cref="Point"/>s, going clockwise from the top left position.
+    /// Does account for <see cref="Rotation"/>.
     /// </summary>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
     public readonly List<Point> ToPoints()
     {
-        throw new NotImplementedException();
+        return [
+            Vector2.RotateAround(new Point(Left, Top).ToVector2(), Origin + Position.ToVector2(), (float)Rotation).ToPoint(),
+            Vector2.RotateAround(new Point(Right, Top).ToVector2(), Origin + Position.ToVector2(), (float)Rotation).ToPoint(),
+            Vector2.RotateAround(new Point(Right, Bottom).ToVector2(), Origin + Position.ToVector2(), (float)Rotation).ToPoint(),
+            Vector2.RotateAround(new Point(Left, Bottom).ToVector2(), Origin + Position.ToVector2(), (float)Rotation).ToPoint(),
+        ];
     }
     
     #endregion methods
