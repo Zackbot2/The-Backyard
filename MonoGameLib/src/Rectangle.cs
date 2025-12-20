@@ -1,12 +1,11 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace TheBackyard.MonoGameLib;
 
 /// <summary>
-/// 
+/// Represents a rectangle.
 /// </summary>
 public struct Rectangle : IPolygon
 {
@@ -20,10 +19,19 @@ public struct Rectangle : IPolygon
     /// The direct center of this <see cref="Rectangle"/>.
     /// </summary>
     public readonly Point Center => new(X + Width/2, Y + Height/2);
+    
     /// <summary>
     /// The top left position of this <see cref="Rectangle"/>.
     /// </summary>
-    public readonly Point Position => new(X, Y);
+    public Point Position
+    {
+        get => new(X, Y);
+        set
+        {
+            X = value.X;
+            Y = value.Y;
+        }
+    }
     #endregion inherited
     /// <summary>
     /// The x coordinate of this <see cref="Rectangle"/>.
@@ -68,7 +76,7 @@ public struct Rectangle : IPolygon
     /// The origin of rotation, in local space.
     /// </summary>
     public Vector2 Origin {get; set;} = Vector2.Zero;
-    #endregion
+    #endregion properties
 
     #region constructors
 
@@ -122,13 +130,21 @@ public struct Rectangle : IPolygon
     #region methods
     #region translation
     /// <summary>
-    /// Center this <see cref="Rectangle"/>
+    /// Center this <see cref="Rectangle"/> on <paramref name="point"/>.
     /// </summary>
     /// <param name="point"></param>
     public void CenterOn(Point point)
     {
-        X = (int)(point.X);
-        Y = (int)(point.Y);
+        Position = new Point(point.X - Width/2, point.Y - Height/2);
+    }
+
+    /// <summary>
+    /// Position this <see cref="Rectangle"/> such that the <see cref="Origin"/> lies on <paramref name="point"/>.
+    /// </summary>
+    /// <param name="point"></param>
+    public void OriginOn(Point point)
+    {
+        Position = point - Origin.ToPoint();
     }
     #endregion translation
     #region interaction
@@ -137,7 +153,7 @@ public struct Rectangle : IPolygon
     /// </summary>
     /// <param name="point"></param>
     /// <returns></returns>
-    public readonly bool ContainsPoint(Point point)
+    public bool ContainsPoint(Point point)
     {
         // immediately return false if the point is outside of collidable range
         if ((point.X - X + point.Y - Y) / 2 > Width + Height)
@@ -149,14 +165,14 @@ public struct Rectangle : IPolygon
             Vector2 yAxis = new(-xAxis.Y, xAxis.X);
 
             // offset from origin, which lies at the position + origin
-            point -= (Position + Origin.ToPoint());
+            point -= Position + Origin.ToPoint();
 
             Point translatedPoint;
 
             translatedPoint.X = (int)(point.X * xAxis.X + point.Y * yAxis.X);
             translatedPoint.Y = (int)(point.X * xAxis.Y + point.Y * yAxis.Y);
 
-            translatedPoint += (Position + Origin.ToPoint());
+            translatedPoint += Position + Origin.ToPoint();
 
             point = translatedPoint;
         }
@@ -166,24 +182,12 @@ public struct Rectangle : IPolygon
     }
 
     /// <summary>
-    /// Does this <see cref="Rectangle"/> overlap with <paramref name="other"/> <see cref="Rectangle"/>?
-    /// </summary>
-    /// <param name="other"></param>
-    /// <returns></returns>
-    public readonly bool Intersects(Rectangle other)
-    {
-        return ShapeUtils.Intersects(this, other);
-    }
-
-    /// <summary>
     /// Does this <see cref="Rectangle"/> overlap with <paramref name="other"/> <see cref="Microsoft.Xna.Framework.Rectangle"/>?
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
-    public readonly bool Intersects(Microsoft.Xna.Framework.Rectangle other)
-    {
-        return ShapeUtils.Intersects(this, FromXna(other));
-    }
+    public readonly bool Intersects(Microsoft.Xna.Framework.Rectangle other) => ShapeUtils.Intersects(this, FromXna(other));
+
     #endregion interaction
     #region xna
     /// <summary>
@@ -191,46 +195,35 @@ public struct Rectangle : IPolygon
     /// </summary>
     /// <param name="rect"></param>
     /// <returns></returns>
-    public static Microsoft.Xna.Framework.Rectangle ToXna(Rectangle rect)
-    {
-        return new(rect.X, rect.Y, rect.Width, rect.Height);
-    }
+    public static Microsoft.Xna.Framework.Rectangle ToXna(Rectangle rect) => new(rect.X, rect.Y, rect.Width, rect.Height);
 
     /// <summary>
     /// Convert this <see cref="Rectangle"/> into a <see cref="Microsoft.Xna.Framework.Rectangle"/>.
     /// </summary>
     /// <returns></returns>
-    public readonly Microsoft.Xna.Framework.Rectangle ToXna()
-    {
-        return ToXna(this);
-    }
+    public readonly Microsoft.Xna.Framework.Rectangle ToXna() => ToXna(this);
 
     /// <summary>
     /// Convert <paramref name="rect"/> <see cref="Microsoft.Xna.Framework.Rectangle"/> into a <see cref="Rectangle"/>.
     /// </summary>
     /// <param name="rect"></param>
     /// <returns></returns>
-    public static Rectangle FromXna(Microsoft.Xna.Framework.Rectangle rect)
-    {
-        return new(rect.X, rect.Y, rect.Width, rect.Height);
-    }
+    public static Rectangle FromXna(Microsoft.Xna.Framework.Rectangle rect) => new(rect.X, rect.Y, rect.Width, rect.Height);
     #endregion xna
-    
+
+    #region inherited
     /// <summary>
     /// Get this <see cref="Rectangle"/> as <see cref="Vector2"/>s, going clockwise from the top left position.
     /// Does account for <see cref="Rotation"/>.
     /// </summary>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public readonly List<Vector2> ToVectors()
-    {
-        return [
+    public readonly List<Vector2> ToVectors() => [
             Vector2.Rotate(new(Right, 0), (float)Rotation),
             Vector2.Rotate(new(0, Bottom), (float)Rotation),
-            //Vector2.Rotate(new(-Right, 0), (float)Rotation),
-            //Vector2.Rotate(new(0, -Bottom), (float)Rotation)
+            Vector2.Rotate(new(-Right, 0), (float)Rotation),
+            Vector2.Rotate(new(0, -Bottom), (float)Rotation)
         ];
-    }
 
     /// <summary>
     /// Get this <see cref="Rectangle"/> as <see cref="Point"/>s, going clockwise from the top left position.
@@ -238,16 +231,22 @@ public struct Rectangle : IPolygon
     /// </summary>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public readonly List<Point> ToPoints()
-    {
-        return [
+    public List<Point> ToPoints() => [
             Vector2.RotateAround(new Point(Left, Top).ToVector2(), Origin + Position.ToVector2(), (float)Rotation).ToPoint(),
             Vector2.RotateAround(new Point(Right, Top).ToVector2(), Origin + Position.ToVector2(), (float)Rotation).ToPoint(),
             Vector2.RotateAround(new Point(Right, Bottom).ToVector2(), Origin + Position.ToVector2(), (float)Rotation).ToPoint(),
             Vector2.RotateAround(new Point(Left, Bottom).ToVector2(), Origin + Position.ToVector2(), (float)Rotation).ToPoint(),
         ];
-    }
-    
+        
+    #endregion inherited
+
+    /// <summary>
+    /// Get the distance between this <see cref="Rectangle"/> and <paramref name="poly"/>.
+    /// </summary>
+    /// <param name="poly"></param>
+    /// <returns></returns>
+    public readonly float GetDistanceFrom(IPolygon poly) => ((IPolygon)this).GetDistanceFrom(poly);
+
     #endregion methods
 
     #region operators
