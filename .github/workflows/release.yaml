@@ -122,6 +122,6 @@ https://www.nuget.org/packages/TheBackyard.$lib/$version
 ### Changes in $lib
 $($commits -join "`n")
 "@
-            gh release create "$tag" `
-              --title "$tag" `
-              --notes "$notes"
+          gh release create "$tag" `
+            --title "$tag" `
+            --notes "$notes"
