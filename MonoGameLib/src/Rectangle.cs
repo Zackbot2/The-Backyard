@@ -25,14 +25,20 @@ public struct Rectangle : IPolygon
     /// </summary>
     public Point Position
     {
-        get => new(X, Y);
+        readonly get => new(X, Y);
         set
         {
             X = value.X;
             Y = value.Y;
         }
     }
+
+    /// <summary>
+    /// The distance from <see cref="Position"/> that fully encapsulates the dimensions of this <see cref="Rectangle"/>
+    /// </summary>
+    public readonly int CollidableRange => Width + Height;
     #endregion inherited
+
     /// <summary>
     /// The x coordinate of this <see cref="Rectangle"/>.
     /// </summary>
@@ -50,6 +56,7 @@ public struct Rectangle : IPolygon
     /// </summary>
     public required int Height {get;set;}
 
+    #region sides
     /// <summary>
     /// The top of this <see cref="Rectangle"/>. Does not account for <see cref="Rotation"/>.
     /// </summary>
@@ -66,6 +73,7 @@ public struct Rectangle : IPolygon
     /// The right of this <see cref="Rectangle"/>. Does not account for <see cref="Rotation"/>.
     /// </summary>
     public readonly int Right => X + Width;
+    #endregion sides
 
     /// <summary>
     /// The rotation of this <see cref="Rectangle"/>, in radians.
@@ -153,7 +161,7 @@ public struct Rectangle : IPolygon
     /// </summary>
     /// <param name="point"></param>
     /// <returns></returns>
-    public bool ContainsPoint(Point point)
+    public readonly bool ContainsPoint(Point point)
     {
         // immediately return false if the point is outside of collidable range
         if ((point.X - X + point.Y - Y) / 2 > Width + Height)
@@ -180,13 +188,6 @@ public struct Rectangle : IPolygon
             point.X >= Left && point.X <= Right 
             && point.Y >= Top && point.Y <= Bottom;
     }
-
-    /// <summary>
-    /// Does this <see cref="Rectangle"/> overlap with <paramref name="other"/> <see cref="Microsoft.Xna.Framework.Rectangle"/>?
-    /// </summary>
-    /// <param name="other"></param>
-    /// <returns></returns>
-    public readonly bool Intersects(Microsoft.Xna.Framework.Rectangle other) => ShapeUtils.Intersects(this, FromXna(other));
 
     #endregion interaction
     #region xna
@@ -231,22 +232,28 @@ public struct Rectangle : IPolygon
     /// </summary>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public List<Point> ToPoints() => [
+    public readonly List<Point> ToPoints() => [
             Vector2.RotateAround(new Point(Left, Top).ToVector2(), Origin + Position.ToVector2(), (float)Rotation).ToPoint(),
             Vector2.RotateAround(new Point(Right, Top).ToVector2(), Origin + Position.ToVector2(), (float)Rotation).ToPoint(),
             Vector2.RotateAround(new Point(Right, Bottom).ToVector2(), Origin + Position.ToVector2(), (float)Rotation).ToPoint(),
             Vector2.RotateAround(new Point(Left, Bottom).ToVector2(), Origin + Position.ToVector2(), (float)Rotation).ToPoint(),
         ];
-        
+
     #endregion inherited
 
     /// <summary>
-    /// Get the distance between this <see cref="Rectangle"/> and <paramref name="poly"/>.
+    /// Get the distance between this <see cref="Rectangle"/> and <paramref name="rect"/>.
     /// </summary>
-    /// <param name="poly"></param>
+    /// <param name="rect"></param>
     /// <returns></returns>
-    public readonly float GetDistanceFrom(IPolygon poly) => ((IPolygon)this).GetDistanceFrom(poly);
+    public readonly float GetDistanceFrom(Rectangle rect) => ((IPolygon)this).GetDistanceFrom(rect);
 
+    /// <summary>
+    /// Determine if this <see cref="Rectangle"/> intersects <paramref name="rect"/>.
+    /// </summary>
+    /// <param name="rect"></param>
+    /// <returns></returns>
+    public readonly bool Intersects(Rectangle rect) => ((IPolygon)this).Intersects(rect);
     #endregion methods
 
     #region operators

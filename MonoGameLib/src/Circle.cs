@@ -86,7 +86,17 @@ public struct Circle : IShape
     /// <returns>Returns the distance BETWEEN each <see cref="Circle"/>. Will be negative if they are overlapping.</returns>
     public static int Distance(Circle circle1, Circle circle2)
     {
-        return ShapeUtils.GetMinimumDistance(circle1, circle2);
+        Point distancePoint = circle1.Position - circle2.Position;
+
+        // we only want the positive version of the distance.
+        // sadly, Point.Absolute() isn't a thing, so we have to do it manually.
+        if (distancePoint.X < 0)
+            distancePoint.X *= -1;
+        if (distancePoint.Y < 0)
+            distancePoint.Y *= -1;
+        
+        // use trig to calculate the effective distance, and then subtract each circle's radius because the insides of the circles don't count.
+        return (int)MathF.Sqrt(distancePoint.X * distancePoint.X + distancePoint.Y * distancePoint.Y) - (circle1.Radius + circle2.Radius);
     }
     #endregion static
 
@@ -97,7 +107,7 @@ public struct Circle : IShape
     /// <returns>Returns the distance <b>between</b> each <see cref="Circle"/>. Will be negative if they are overlapping.</returns>
     public readonly int Distance(Circle circle)
     {
-        return ShapeUtils.GetMinimumDistance(this, circle);
+        return Distance(this, circle);
     }
     #endregion distance
 }

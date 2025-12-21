@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Linq;
 using Microsoft.Xna.Framework;
 
 namespace TheBackyard.MonoGameLib;
@@ -8,6 +9,11 @@ namespace TheBackyard.MonoGameLib;
 /// </summary>
 public interface IPolygon : IShape
 {
+    /// <summary>
+    /// The distance from <see cref="IShape.Position"/> that fully encapsulates the dimensions of this <see cref="IPolygon"/>.
+    /// </summary>
+    int CollidableRange {get;}
+
     /// <summary>
     /// This <see cref="IPolygon"/>, as a list of <see cref="Vector2"/>.
     /// </summary>
@@ -32,8 +38,8 @@ public interface IPolygon : IShape
     /// </returns>
     List<Vector2> GetNormals()
     {
-        List<Vector2> normals = [];
         List<Vector2> vectors = ToVectors();
+        List<Vector2> normals = [];
         // IMPORTANT: we need to ensure we're actually going clockwise or counter-clockwise around the polygon. we currently do NOT do this.
         // for now, let's assume clockwise.
 
@@ -53,13 +59,37 @@ public interface IPolygon : IShape
     /// <exception cref="NotImplementedException"></exception>
     float GetDistanceFrom(IPolygon poly2)
     {
-        Debug.WriteLine("Getting distance between polygons.");
-        // 1. Find the normals to calculate for each box
+        #region calculate normals
+        // find the normals to calculate for each box
+        
         List<Vector2> normals = GetNormals();
         normals.AddRange(poly2.GetNormals());
 
-        Debug.WriteLine($"Found {normals.Count} normals.");
-        // - Eliminate any normals that are exactly equal or opposite
+        // eliminate any normals that are exactly equal or opposite
+
+        List<Vector2> trimmedNormals = [];
+
+        // using double foreach instead of linq for performance.
+        // i agree this looks pretty disgusting, but it allows for 1 less sequence than something like .Where + .Contains.
+
+        foreach (Vector2 normal in normals)
+        {
+            bool addThisNormal = true;
+            foreach (Vector2 trimmedNormal in trimmedNormals)
+            {
+                if (trimmedNormal == normal || trimmedNormal == normal * -1)
+                {
+                    addThisNormal = false;
+                    break;
+                }
+            }
+            if (addThisNormal)
+                trimmedNormals.Add(normal);
+        }
+
+        normals = trimmedNormals;
+        #endregion calculate normals
+
         List<Vector2> poly1Points = ToPoints().ConvertAll(p => p.ToVector2());
         List<Vector2> poly2Points = poly2.ToPoints().ConvertAll(p => p.ToVector2());
 
@@ -69,10 +99,10 @@ public interface IPolygon : IShape
         foreach (Vector2 normal in normals)
         {
             normal.Normalize();
-            // 1. find `box1.min`, `box1.max`, `box2.min` and `box2.max` using the dot product of each point and the normal
+            
             float? newGap = null;
 
-            // get the min and max values for poly1. we don't need to remember the point location or anything, just the dot value.
+            // find the min and max dot product of each point and the current normal
 
             float poly1Min = Vector2.Dot(poly1Points[0], normal);
             float poly1Max = poly1Min;
@@ -105,21 +135,16 @@ public interface IPolygon : IShape
                 }
             }
 
-            Debug.WriteLine($"Poly1: ({poly1Min}, {poly1Max}), Poly2: ({poly2Min}, {poly2Max})");
-            
-            // 2. Determine if there's a gap (`box1.max` < `box2.min`) or (`box2.max` > `box1.min`)
+            // determine if there's a gap
 
             newGap = MathF.Max(poly2Min - poly1Max, poly1Min - poly2Max);
                 
-            // 3. If there is a gap, these boxes are not colliding and you can immediately exit.
-                // - If you want to find the exact distance, you would need to continue and return the smallest value achieved at this point in the loop once finished.
+            // remember this gap. the distance between the polygons is the maximum gap found.
             if (newGap != null && (gap == null || newGap > gap))
                 gap = newGap;
 
-            Debug.WriteLine($"THIS NORMAL'S GAP: {newGap}");
         }
         //  3. If you get to this point and there's still no gap found, the boxes are overlapping.
-        Debug.WriteLine(gap);
         return gap??= 0;
     }
 
@@ -129,8 +154,106 @@ public interface IPolygon : IShape
     /// <param name="poly2"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
+    /// <remarks>
+    /// This code is a slightly tweaked version of <see cref="GetDistanceFrom"/>.
+    /// It returns false as soon as any gap is found, making it much lighter.
+    /// </remarks>
     bool Intersects(IPolygon poly2)
     {
-        throw new NotImplementedException();
+        // exit early if the polygons are too far apart to collide
+        if (!IsInCollidableRange(poly2))
+            return false;
+
+        #region calculate normals
+        // find the normals to calculate for each box
+        
+        List<Vector2> normals = GetNormals();
+        normals.AddRange(poly2.GetNormals());
+
+        // eliminate any normals that are exactly equal or opposite
+
+        List<Vector2> trimmedNormals = [];
+
+        // using double foreach instead of linq for performance.
+        // i agree this looks pretty disgusting, but it allows for 1 less sequence than something like .Where + .Contains.
+
+        foreach (Vector2 normal in normals)
+        {
+            bool addThisNormal = true;
+            foreach (Vector2 trimmedNormal in trimmedNormals)
+            {
+                if (trimmedNormal == normal || trimmedNormal == normal * -1)
+                {
+                    addThisNormal = false;
+                    break;
+                }
+            }
+            if (addThisNormal)
+                trimmedNormals.Add(normal);
+        }
+
+        normals = trimmedNormals;
+        #endregion calculate normals
+
+        List<Vector2> poly1Points = ToPoints().ConvertAll(p => p.ToVector2());
+        List<Vector2> poly2Points = poly2.ToPoints().ConvertAll(p => p.ToVector2());
+
+        foreach (Vector2 normal in normals)
+        {
+            normal.Normalize();
+
+            // find the min and max dot product of each point and the current normal
+
+            float poly1Min = Vector2.Dot(poly1Points[0], normal);
+            float poly1Max = poly1Min;
+            foreach(Vector2 point in poly1Points)
+            {
+                float pointDot = Vector2.Dot(point, normal);
+                if (poly1Min > pointDot)
+                {
+                    poly1Min = pointDot;
+                }
+                if (poly1Max < pointDot)
+                {
+                    poly1Max = pointDot;
+                }
+            }
+
+            // do the same with poly2
+            float poly2Min = Vector2.Dot(poly2Points[0], normal);
+            float poly2Max = poly2Min;
+            foreach(Vector2 point in poly2Points)
+            {
+                float pointDot = Vector2.Dot(point, normal);
+                if (poly2Min > pointDot)
+                {
+                    poly2Min = pointDot;
+                }
+                if (poly2Max < pointDot)
+                {
+                    poly2Max = pointDot;
+                }
+            }
+
+            // determine if there's a gap
+            if (poly2Min > poly1Max || poly1Min > poly2Max)
+                // there is a gap, these boxes are not colliding. return false immediately to save performance.
+                return false;
+        }
+        //  if you get to this point and there's still no gap found, the boxes are overlapping.
+        return true;
+    }
+
+    /// <summary>
+    /// Determine if this <see cref="IPolygon"/> is within collidable range of <paramref name="poly"/>.
+    /// </summary>
+    /// <param name="poly"></param>
+    /// <returns></returns>
+    bool IsInCollidableRange(IPolygon poly)
+    {
+        int differenceX = Math.Abs(Position.X - poly.Position.X);
+        int differenceY = Math.Abs(Position.Y - poly.Position.Y);
+
+        return (differenceX + differenceY) < CollidableRange + poly.CollidableRange;
     }
 }
