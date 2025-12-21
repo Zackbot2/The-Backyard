@@ -106,7 +106,7 @@ jobs:
 
           # Collect matching commits
           $commits = git log $range --pretty=format:"- %s" |
-                    Where-Object { $_ -like "$lib:*" } |
+                    Where-Object { $_ -like "${lib}:*" } |
                     ForEach-Object { $_.Substring($lib.Length + 2) }
 
           if (-not $commits) {
