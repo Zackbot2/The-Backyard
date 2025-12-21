@@ -42,7 +42,7 @@
   </ItemGroup>
 
   <!-- Include README in package if it exists -->
-  <PropertyGroup Condition="Exists('$(MSBuildProjectDirectory)\README.md')">
+  <PropertyGroup Condition="Exists('$(MSBuildProjectDirectory)\..\README.md')">
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
