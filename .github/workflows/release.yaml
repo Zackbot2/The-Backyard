@@ -2,7 +2,9 @@ name: Release
 
 on:
   push:
-    tags: ['*-v*.*']  # Match tags like 'TheBackyard.MonogameLib v1.2.3'
+    branches:
+    - '**'
+    tags: ['*-v*.*']  # Match tags like 'TheBackyard.MonogameLib-v1.2.3'
   workflow_dispatch:
     inputs:
       project:
@@ -122,7 +124,6 @@ jobs:
         ### Changes in $lib
         $($commits -join "`n")
         "@
-
             gh release create "$tag" `
               --title "$tag" `
               --notes "$notes"
