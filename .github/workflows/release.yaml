@@ -2,8 +2,6 @@ name: Release
 
 on:
   push:
-    branches:
-    - '**'
     tags: ['*-v*.*']  # Match tags like 'TheBackyard.MonogameLib-v1.2.3'
   workflow_dispatch:
     inputs:
@@ -116,14 +114,14 @@ jobs:
           }
 
           $notes = @"
-        **NuGet package**
-        https://www.nuget.org/packages/TheBackyard.$lib/$version
+**NuGet package**
+https://www.nuget.org/packages/TheBackyard.$lib/$version
 
-        ---
+---
 
-        ### Changes in $lib
-        $($commits -join "`n")
-        "@
+### Changes in $lib
+$($commits -join "`n")
+"@
             gh release create "$tag" `
               --title "$tag" `
               --notes "$notes"
