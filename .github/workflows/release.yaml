@@ -2,7 +2,7 @@ name: Release
 
 on:
   push:
-    tags: ['*-v*.*']  # Match tags like 'TheBackyard.MonogameLib v1.2.3'
+    tags: ['*-v*.*']  # Match tags like 'TheBackyard.MonogameLib-v1.2.3'
   workflow_dispatch:
     inputs:
       project:
@@ -79,3 +79,49 @@ jobs:
           } else {
             throw "No package found to push."
           }
+
+      - name: Create GitHub Release (filtered by commit prefix)
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        run: |
+          $tag = "${{ github.ref_name }}"
+          if ($tag -notmatch '^(.+)-v(.+)$') {
+            throw "Tag does not match <Lib>-v<version>"
+          }
+
+          $lib = $matches[1]
+          $version = $matches[2]
+
+          # Find previous tag for this library
+          $prevTag = git tag --list "$lib-v*" --sort=-version:refname |
+                    Where-Object { $_ -ne $tag } |
+                    Select-Object -First 1
+
+          if (-not $prevTag) {
+            $range = $tag
+          } else {
+            $range = "$prevTag..$tag"
+          }
+
+          # Collect matching commits
+          $commits = git log $range --pretty=format:"- %s" |
+                    Where-Object { $_ -like "${lib}:*" } |
+                    ForEach-Object { $_.Substring($lib.Length + 2) }
+
+          if (-not $commits) {
+            $commits = "- No user-facing changes"
+          }
+
+          $notes = @"
+          **NuGet package**
+          https://www.nuget.org/packages/TheBackyard.$lib/$version
+
+          ---
+
+          ### Changes in $lib
+          $($commits -join "`n")
+          "@
+          gh release create "$tag" `
+            --title "$tag" `
+            --notes "$notes"
