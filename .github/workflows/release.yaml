@@ -75,47 +75,47 @@ jobs:
           $key = "${{ secrets.NUGET_API_KEY }}"
           $pkg = Get-ChildItem ".\artifacts\packages\*.nupkg" | Select-Object -First 1
           if ($pkg) {
-            dotnet nuget push $pkg.FullName --source $src --api-key $key --skip-duplicate
+            #dotnet nuget push $pkg.FullName --source $src --api-key $key --skip-duplicate
           } else {
             throw "No package found to push."
           }
 
-        - name: Create GitHub Release (filtered by commit prefix)
-          shell: pwsh
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          run: |
-            $tag = "${{ github.ref_name }}"
-            if ($tag -notmatch '^(.+)-v(.+)$') {
-              throw "Tag does not match <Lib>-v<version>"
-            }
+      - name: Create GitHub Release (filtered by commit prefix)
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tag = "${{ github.ref_name }}"
+          if ($tag -notmatch '^(.+)-v(.+)$') {
+            throw "Tag does not match <Lib>-v<version>"
+          }
 
-            $lib = $matches[1]
-            $version = $matches[2]
+          $lib = $matches[1]
+          $version = $matches[2]
 
-            # Find previous tag for this library
-            $prevTag = git tag --list "$lib-v*" --sort=-version:refname |
-                      Where-Object { $_ -ne $tag } |
-                      Select-Object -First 1
+          # Find previous tag for this library
+          $prevTag = git tag --list "$lib-v*" --sort=-version:refname |
+                    Where-Object { $_ -ne $tag } |
+                    Select-Object -First 1
 
-            if (-not $prevTag) {
-              $range = $tag
-            } else {
-              $range = "$prevTag..$tag"
-            }
+          if (-not $prevTag) {
+            $range = $tag
+          } else {
+            $range = "$prevTag..$tag"
+          }
 
-            # Collect matching commits
-            $commits = git log $range --pretty=format:"- %s" |
-                      Where-Object { $_ -like "$lib:*" } |
-                      ForEach-Object { $_.Substring($lib.Length + 2) }
+          # Collect matching commits
+          $commits = git log $range --pretty=format:"- %s" |
+                    Where-Object { $_ -like "$lib:*" } |
+                    ForEach-Object { $_.Substring($lib.Length + 2) }
 
-            if (-not $commits) {
-              $commits = "- No user-facing changes"
-            }
+          if (-not $commits) {
+            $commits = "- No user-facing changes"
+          }
 
-            $notes = @"
+          $notes = @"
         **NuGet package**
-        https://www.nuget.org/packages/$lib/$version
+        https://www.nuget.org/packages/TheBackyard.$lib/$version
 
         ---
 
