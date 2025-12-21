@@ -83,7 +83,7 @@ jobs:
       - name: Create GitHub Release (filtered by commit prefix)
         shell: pwsh
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         run: |
           $tag = "${{ github.ref_name }}"
           if ($tag -notmatch '^(.+)-v(.+)$') {

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>TheBackyard.MonoGameLib</PackageId>
-    <Version>2.0.6</Version>
+    <Version>2.0.7</Version>
     <Description>MonoGame utility library from The Backyard collection.</Description>
   </PropertyGroup>
 
