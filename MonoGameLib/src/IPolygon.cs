@@ -158,6 +158,94 @@ public interface IPolygon : IShape
     }
 
     /// <summary>
+    /// Get the gaps between this <see cref="IPolygon"/> and <paramref name="poly2"/>.
+    /// </summary>
+    /// <param name="poly2"></param>
+    /// <returns></returns>
+    List<(Vector2 normal, float gap)> GetGaps(IPolygon poly2)
+    {
+        #region calculate normals
+        // find the normals to calculate for each box
+        
+        List<Vector2> normals = GetNormals();
+        normals.AddRange(poly2.GetNormals());
+
+        // eliminate any normals that are exactly equal or opposite
+
+        List<Vector2> trimmedNormals = [];
+
+        // using double foreach instead of linq for performance.
+        // i agree this looks pretty disgusting, but it allows for 1 less sequence than something like .Where + .Contains.
+
+        foreach (Vector2 normal in normals)
+        {
+            bool addThisNormal = true;
+            foreach (Vector2 trimmedNormal in trimmedNormals)
+            {
+                if (trimmedNormal == normal || trimmedNormal == normal * -1)
+                {
+                    addThisNormal = false;
+                    break;
+                }
+            }
+            if (addThisNormal)
+                trimmedNormals.Add(normal);
+        }
+
+        normals = trimmedNormals;
+        #endregion calculate normals
+
+        List<Vector2> poly1Points = ToPoints().ConvertAll(p => p.ToVector2());
+        List<Vector2> poly2Points = poly2.ToPoints().ConvertAll(p => p.ToVector2());
+
+        List<(Vector2, float)> normalGaps = [];
+
+        // 2. For each one of these normals:
+        foreach (Vector2 normal in normals)
+        {
+            normal.Normalize();
+
+            // find the min and max dot product of each point and the current normal
+
+            float poly1Min = Vector2.Dot(poly1Points[0], normal);
+            float poly1Max = poly1Min;
+            foreach(Vector2 point in poly1Points)
+            {
+                float pointDot = Vector2.Dot(point, normal);
+                if (poly1Min > pointDot)
+                {
+                    poly1Min = pointDot;
+                }
+                if (poly1Max < pointDot)
+                {
+                    poly1Max = pointDot;
+                }
+            }
+
+            // do the same with poly2
+            float poly2Min = Vector2.Dot(poly2Points[0], normal);
+            float poly2Max = poly2Min;
+            foreach(Vector2 point in poly2Points)
+            {
+                float pointDot = Vector2.Dot(point, normal);
+                if (poly2Min > pointDot)
+                {
+                    poly2Min = pointDot;
+                }
+                if (poly2Max < pointDot)
+                {
+                    poly2Max = pointDot;
+                }
+            }
+
+            // remember the gap
+            normalGaps.Add((normal, MathF.Max(poly2Min - poly1Max, poly1Min - poly2Max)));
+        }
+        //  3. If you get to this point and there's still no gap found, the boxes are overlapping.
+        return normalGaps;
+    }
+
+    /// <summary>
     /// Is this <see cref="IPolygon"/> overlapping with <paramref name="poly2"/>?
     /// </summary>
     /// <param name="poly2"></param>
