@@ -72,6 +72,8 @@ public static class DrawExtensions
         {
             Origin = new(2, 2)
         };
+        
+        rect.CenterOn(point);
         rect.Draw(spriteBatch, graphicsDevice, color);
     }
 
@@ -90,6 +92,8 @@ public static class DrawExtensions
         {
             Origin = new(2, 2)
         };
+
+        rect.CenterOn(point);
         rect.Draw(spriteBatch, pixelTexture, color);
     }
     #endregion Point

@@ -32,6 +32,28 @@ public struct Rectangle : IPolygon
             Y = value.Y;
         }
     }
+    
+    /// <summary>
+    /// The rotation of this <see cref="Rectangle"/>, in radians.
+    /// </summary>
+    public double Rotation {get; set;} = 0;
+
+    /// <summary>
+    /// The <see cref="Origin"/> relative to the dimensions of this <see cref="Rectangle"/>.
+    /// Takes priority over <see cref="Origin"/> if it has a value.
+    /// </summary>
+    public Vector2? RelativeOrigin {get; set;} = null;
+
+    /// <summary>
+    /// The origin of rotation, in local space.
+    /// If <see cref="RelativeOrigin"/> has a value, <see cref="Origin"/> will be calculated based on that.
+    /// Otherwise, uses its stored value.
+    /// </summary>
+    public Vector2 Origin 
+    { 
+        readonly get => RelativeOrigin != null ? new(RelativeOrigin.Value.X * Width, RelativeOrigin.Value.Y * Height) : field;
+        set;
+    } = Vector2.Zero;
 
     /// <summary>
     /// The distance from <see cref="Position"/> that fully encapsulates the dimensions of this <see cref="Rectangle"/>
@@ -75,15 +97,6 @@ public struct Rectangle : IPolygon
     public readonly int Right => X + Width;
     #endregion sides
 
-    /// <summary>
-    /// The rotation of this <see cref="Rectangle"/>, in radians.
-    /// </summary>
-    public double Rotation {get; set;} = 0;
-
-    /// <summary>
-    /// The origin of rotation, in local space.
-    /// </summary>
-    public Vector2 Origin {get; set;} = Vector2.Zero;
     #endregion properties
 
     #region constructors
@@ -136,6 +149,19 @@ public struct Rectangle : IPolygon
     #endregion constructors
 
     #region methods
+
+    /// <summary>
+    /// Set the <see cref="Origin"/> to <paramref name="origin"/>.
+    /// Pass a null <paramref name="origin"/> to reset <see cref="Origin"/> to default.
+    /// </summary>
+    /// <param name="origin"></param>
+    public void SetOrigin(Vector2? origin)
+    {
+        origin ??= Vector2.Zero;
+
+        Origin = (Vector2)origin;
+    }
+
     #region translation
     /// <summary>
     /// Center this <see cref="Rectangle"/> on <paramref name="point"/>.
@@ -154,6 +180,7 @@ public struct Rectangle : IPolygon
     {
         Position = point - Origin.ToPoint();
     }
+    
     #endregion translation
     #region interaction
     /// <summary>

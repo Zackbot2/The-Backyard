@@ -10,6 +10,16 @@ namespace TheBackyard.MonoGameLib;
 public interface IPolygon : IShape
 {
     /// <summary>
+    /// The origin of <see cref="Rotation"/>, relative to <see cref="IShape.Position"/>.
+    /// </summary>
+    Vector2 Origin {get; set;}
+
+    /// <summary>
+    /// The rotation of this <see cref="IPolygon"/>.
+    /// </summary>
+    double Rotation {get; set;}
+
+    /// <summary>
     /// The distance from <see cref="IShape.Position"/> that fully encapsulates the dimensions of this <see cref="IPolygon"/>.
     /// </summary>
     int CollidableRange {get;}
@@ -56,7 +66,6 @@ public interface IPolygon : IShape
     /// </summary>
     /// <param name="poly2"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     float GetDistanceFrom(IPolygon poly2)
     {
         #region calculate normals
@@ -153,7 +162,6 @@ public interface IPolygon : IShape
     /// </summary>
     /// <param name="poly2"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     /// <remarks>
     /// This code is a slightly tweaked version of <see cref="GetDistanceFrom"/>.
     /// It returns false as soon as any gap is found, making it much lighter.
@@ -251,9 +259,11 @@ public interface IPolygon : IShape
     /// <returns></returns>
     bool IsInCollidableRange(IPolygon poly)
     {
-        int differenceX = Math.Abs(Position.X - poly.Position.X);
-        int differenceY = Math.Abs(Position.Y - poly.Position.Y);
+        Point realPosition = Position.RotateAround(Position.ToVector2() + Origin, (float)Rotation);
+        Point polyRealPosition = poly.Position.RotateAround(poly.Position.ToVector2() + poly.Origin, (float)poly.Rotation);
+        int differenceX = Math.Abs(realPosition.X - polyRealPosition.X);
+        int differenceY = Math.Abs(realPosition.Y - polyRealPosition.Y);
 
-        return (differenceX + differenceY) < CollidableRange + poly.CollidableRange;
+        return differenceX + differenceY < CollidableRange + poly.CollidableRange;
     }
 }
