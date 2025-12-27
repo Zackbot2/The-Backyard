@@ -162,6 +162,10 @@ public interface IPolygon : IShape
     /// </summary>
     /// <param name="poly2"></param>
     /// <returns></returns>
+    /// <remarks>
+    /// This is somewhat unfinished, and may not even make it into a release version.
+    /// It serves as a prototype for checking where polygons intersect.
+    /// </remarks>
     List<(Vector2 normal, float gap)> GetGaps(IPolygon poly2)
     {
         #region calculate normals
